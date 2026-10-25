@@ -30,7 +30,7 @@
 #define PDMA_CHANNEL_ID2 2
 #define PDMA_CHANNEL_ID3 3
 
-#define PDMA_MAX_TRANSACTION	64                                  // ПДП копирует блоками по 8 байт
+#define PDMA_MAX_TRANSACTION	64                                  // Размер одной ПДП-транзакции, байт
 #define	U(a)		        ((pdmareg32_t) a)
 
 // 
@@ -51,17 +51,16 @@ typedef struct {
     __IM pdmareg64_t    PDMA_EXEC_SOURCE;
 }PDMA_TypeDef;
 
+#define DMA0_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID0))           // 3000000
+#define DMA1_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID1))           // 3001000
+#define DMA2_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID2))           // 3002000
+#define DMA3_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID3))           // 3003000
+
 // Сделано по образу и подобию SPL
 #define PDMA_CH0                 ((PDMA_TypeDef *)DMA0_UNIT_BASE)
 #define PDMA_CH1                 ((PDMA_TypeDef *)DMA1_UNIT_BASE)
 #define PDMA_CH2                 ((PDMA_TypeDef *)DMA2_UNIT_BASE)
 #define PDMA_CH3                 ((PDMA_TypeDef *)DMA3_UNIT_BASE)
-
-
-#define DMA0_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID0))           // 3000000
-#define DMA1_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID1))           // 3001000
-#define DMA2_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID2))           // 3002000
-#define DMA3_UNIT_BASE    (PDMA_BASE + (PDMA_OFFSET * PDMA_CHANNEL_ID3))           // 3003000
 
 
 //
@@ -104,11 +103,11 @@ typedef struct {
 #define PDMA_NCR_order       PDMA_NCR_order_Msk
 
 #define PDMA_NCR_wsize_Pos   (24U)
-#define PDMA_NCR_wsize_Msk   (0x01UL<< PDMA_NCR_wsize_Pos)
+#define PDMA_NCR_wsize_Msk   (0x07UL<< PDMA_NCR_wsize_Pos)
 #define PDMA_NCR_wsize       PDMA_NCR_wsize_Msk
 
 #define PDMA_NCR_rsize_Pos   (28U)
-#define PDMA_NCR_rsize_Msk   (0x01UL<< PDMA_NCR_rsize_Pos)
+#define PDMA_NCR_rsize_Msk   (0x07UL<< PDMA_NCR_rsize_Pos)
 #define PDMA_NCR_rsize       PDMA_NCR_rsize_Msk
 
 
@@ -138,7 +137,8 @@ PDMA_NCR_RSIZE_64BYTE
 
 
 // Прототипы функции
-void dma_memcpy(void *dst, const volatile void *src, size_t size, int wait_ready);
+// size_code - код размера транзакции PDMA_NCR_WSIZE_x, фактический размер = 1 << size_code байт
+void dma_memcpy(void *dst, const volatile void *src, size_t size_code, int wait_ready);
 void dma_wait_transaction(void);
 
 #define DMA_NCR_RSIZE

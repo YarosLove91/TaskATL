@@ -31,6 +31,8 @@ struct RingBuffer {
 void ring_buffer_init(struct RingBuffer *b);
 // Буфер полон ?
 int ring_buffer_is_full(const struct RingBuffer *b);
+// Буфер пуст ?
+int ring_buffer_is_empty(const struct RingBuffer *b);
 // Количество элементов в буфере
 unsigned ring_buffer_count(const struct RingBuffer *b);
 // Запись данных в буфер
@@ -42,6 +44,6 @@ void ring_buffer_clear(struct RingBuffer *b);
 // Вычитываем пакет данных
 int ring_buffer_read_many(struct RingBuffer *b, data_t *val, unsigned int count);
 // Читаем состояние буфера
-const uint8_t get_status (const struct RingBuffer *b);
+uint8_t get_status(const struct RingBuffer *b);
 
 #endif

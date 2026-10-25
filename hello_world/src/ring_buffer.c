@@ -9,11 +9,12 @@
 void ring_buffer_init(struct RingBuffer *b)
 {
 	memset(b, 0, sizeof(*b));
+	b->fifo_status.status.empty = 1;
 }
 
 int ring_buffer_is_full(const struct RingBuffer *b)
 {
-	return ((b->w_count - b->r_count) & (T_INDEX) & ~(MASK)) != 0;
+	return (b->w_count - b->r_count) == SIZE;
 }
 
 int ring_buffer_is_empty(const struct RingBuffer *b)
@@ -23,7 +24,7 @@ int ring_buffer_is_empty(const struct RingBuffer *b)
 
 unsigned ring_buffer_count(const struct RingBuffer *b)
 {
-	return (b->w_count - b->r_count) & MASK;
+	return b->w_count - b->r_count;
 }
 
 int ring_buffer_write(struct RingBuffer *b, data_t value)
@@ -101,6 +102,6 @@ void ring_buffer_clear(struct RingBuffer *b)
 	b->fifo_status.status.empty	=	1;
 }
 
-const uint8_t get_status (const struct RingBuffer *b){
+uint8_t get_status(const struct RingBuffer *b){
 	return b->fifo_status.reg_status;
 }

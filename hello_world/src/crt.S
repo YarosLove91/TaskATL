@@ -1,17 +1,22 @@
 .equ STACK_SIZE,   4096
-.equ STACK_SHIFT,  30
 
 .global _start
 
 .section .text.init
 _start:
 	csrr    t0, mhartid
-	slli    t0, t0, STACK_SHIFT
+	bnez    t0, park
+
+	/* Vector trap handler (direct mode, trap_entry is .align 2) */
+	la      t0, trap_entry
+	csrw    mtvec, t0
+
 	la      sp, stacks + STACK_SIZE
-	add     sp, sp, t0
+
+	call	start
 
 1:
-	call	start
+	j	1b
 
 .global pr
 pr:
@@ -22,6 +27,11 @@ pr:
 .align 2
 trap_entry:
 	j	handle_trap
+
+/* Secondary harts have no own stack and no work: park them */
+park:
+	wfi
+	j	park
 
 .section .bss
 .align 4

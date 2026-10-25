@@ -10,21 +10,21 @@
 
 extern char _end_of_image[];
 
-// Переселыка данных в р-р разм-ю 32 бита
+// Пересылка данных в регистр размером 32 бита
 static inline void writel(uint32_t val, volatile void *addr){
 	*(volatile uint32_t *) addr = val;
 }
-// Чтение данных из р-а разм-ю 32 бита
+// Чтение данных из регистра размером 32 бита
 static inline uint32_t readl(const volatile void *addr){
 	return *(volatile uint32_t *) addr;
 }
 
-// Переселыка данных в р-р разм-ю 64 бита
+// Пересылка данных в регистр размером 64 бита
 static inline void writelLong(uint64_t val, volatile void *addr){
 	*(volatile uint64_t *) addr = val;
 }
-// Чтение данных из р-а разм-ю 64 бита
-static inline uint64_t readlLong(uint64_t val, const volatile void *addr){
+// Чтение данных из регистра размером 64 бита
+static inline uint64_t readlLong(const volatile void *addr){
 	return *(volatile uint64_t *) addr;
 }
 

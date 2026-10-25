@@ -38,6 +38,7 @@ static int vsnprintf(char * out, size_t n, const char* s, va_list vl)
                     out[pos] = 'x';
                 }
                 pos++;
+                /* fall through */
             }
             case 'x': {
                 long num = longarg ? va_arg(vl, long) : va_arg(vl, int);
